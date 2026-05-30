@@ -1,235 +1,339 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
-
 body{
-    background:linear-gradient(135deg,#fff0f5,#ffe4ec);
-    min-height:100vh;
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#3b001f,#5e002c,#240015);
+    color:#fff;
 }
 
-/* MAIN PROFILE */
-.profile-container{
-    max-width:1000px;
-    margin:30px auto;
-    background:#fff;
-    border-radius:25px;
-    overflow:hidden;
-    box-shadow:0 15px 40px rgba(0,0,0,0.12);
+.profile{
+    max-width:1220px;
+    width:50%;
+    margin: auto;
 }
 
 /* COVER */
+
 .cover{
-    height:280px;
-    position:relative;
+    border-radius:20px 20px 0 0;
     overflow:hidden;
+    border:1px solid rgba(255,255,255,.12);
 }
 
-.cover img{
+.cover-img{
     width:100%;
-    height:100%;
-    object-fit:cover;
-}
-
-/* DARK OVERLAY */
-.cover::after{
-    content:'';
-    position:absolute;
-    inset:0;
-    background:rgba(0,0,0,0.25);
+    height:300px;
+    object-fit:contain;
+    background:#000;
 }
 
 /* PROFILE HEADER */
+
 .profile-header{
-    position:relative;
-    text-align:center;
-    padding:90px 20px 35px;
-}
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(255,255,255,.12);
+    border-top:none;
+    border-radius:0 0 20px 20px;
 
-/* PROFILE IMAGE */
-.profile-pic{
-    width:170px;
-    height:170px;
-    border-radius:50%;
-    object-fit:cover;
-    border:7px solid white;
-    position:absolute;
-    left:50%;
-    top:-90px;
-    transform:translateX(-50%);
-    box-shadow:0 10px 30px rgba(0,0,0,0.25);
-    transition:.4s;
-}
-
-.profile-pic:hover{
-    transform:translateX(-50%) scale(1.05);
-}
-
-/* NAME */
-.profile-header h2{
-    font-size:2rem;
-    color:#222;
-    margin-bottom:8px;
-}
-
-.username{
-    color:#777;
-    font-size:15px;
-    margin-bottom:15px;
-}
-
-.bio{
-    max-width:600px;
-    margin:auto;
-    color:#555;
-    line-height:1.7;
-}
-
-/* STATS */
-.stats{
     display:flex;
-    justify-content:center;
-    gap:50px;
-    margin-top:30px;
-    flex-wrap:wrap;
+    justify-content:space-between;
+    align-items:flex-end;
+
+    padding:10px 25px;
 }
 
-.stat{
-    text-align:center;
-}
-
-.stat h3{
-    color:#ff3f81;
-    font-size:28px;
-}
-
-.stat p{
-    color:#777;
-    margin-top:5px;
-}
-
-/* BUTTONS */
-.profile-actions{
-    margin-top:30px;
+.profile-left{
     display:flex;
-    justify-content:center;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-.btn{
-    padding:12px 28px;
-    border:none;
-    border-radius:50px;
-    cursor:pointer;
-    font-size:15px;
-    font-weight:600;
-    transition:.3s;
-}
-
-.btn-primary{
-    background:linear-gradient(135deg,#ff4f8b,#ff2d75);
-    color:white;
-}
-
-.btn-secondary{
-    background:#f3f3f3;
-    color:#333;
-}
-
-.btn:hover{
-    transform:translateY(-3px);
-    box-shadow:0 8px 20px rgba(0,0,0,.15);
-}
-
-/* INFO CARD */
-.info-section{
-    padding:35px;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    align-items:flex-end;
     gap:20px;
 }
 
-.info-card{
-    background:rgba(255,255,255,0.8);
-    backdrop-filter:blur(10px);
-    border:1px solid rgba(255,79,139,0.15);
+.profile-pic{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    object-fit:cover;
+
+    border:5px solid #ff5d8f;
+    margin-top:-90px;
+
+    box-shadow:0 0 25px rgba(255,77,109,.4);
+}
+
+.profile-details h2{
+    margin:0;
+    color:white;
+    font-size:32px;
+}
+
+.profile-details p{
+    color:#d7c5ce;
+    margin-top:6px;
+}
+
+/* BUTTONS */
+
+.profile-right{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.profile-right button{
+    border:none;
+    border-radius:12px;
+    padding:11px 20px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.add,
+.accept{
+    background:linear-gradient(135deg,#ff4d6d,#ff7b9b);
+    color:white;
+}
+
+.msg{
+    background:rgba(255,255,255,.08);
+    color:white;
+}
+
+.friends{
+    background:rgba(255,255,255,.08);
+    color:white;
+}
+
+.requested{
+    background:#ffbfd0;
+    color:#222;
+}
+
+/* INFO CARD */
+
+.card{
+    margin-top:15px;
+
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.12);
     border-radius:18px;
-    padding:25px;
-    transition:.3s;
+
+    padding:20px;
+    color:white;
 }
 
-.info-card:hover{
-    transform:translateY(-5px);
-    box-shadow:0 10px 25px rgba(255,79,139,.15);
+/* TABS */
+
+.tabs{
+    margin-top:15px;
+
+    display:flex;
+
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(12px);
+
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.12);
+
+    overflow:hidden;
 }
 
-.info-card h4{
-    color:#ff3f81;
-    margin-bottom:12px;
+.tabs button{
+    flex:1;
+    border:none;
+    background:transparent;
+    color:#d7c5ce;
+
+    padding:15px;
+    cursor:pointer;
+    font-weight:600;
 }
 
-.info-card p{
-    color:#666;
-    line-height:1.6;
+.tabs button:hover{
+    background:rgba(255,255,255,.05);
 }
 
-/* GALLERY */
-.gallery{
-    padding:35px;
+.tabs button.active{
+    color:#ff6b8e;
+    border-bottom:3px solid #ff6b8e;
 }
 
-.gallery h3{
-    margin-bottom:20px;
-    color:#333;
+/* CONTENT */
+
+.section{
+    margin-top:15px;
+
+    background:rgba(255,255,255,.06);
+    backdrop-filter:blur(12px);
+
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.12);
+
+    padding:20px;
 }
 
-.gallery-grid{
+/* FRIENDS */
+
+#friends > div{
     display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
     gap:15px;
 }
 
-.gallery-grid img{
-    width:100%;
-    height:220px;
-    object-fit:cover;
+#friends > div > div{
+    background:rgba(255,255,255,.05);
     border-radius:15px;
-    transition:.4s;
+    overflow:hidden;
+    transition:.3s;
 }
 
-.gallery-grid img:hover{
-    transform:scale(1.04);
+#friends > div > div:hover{
+    transform:translateY(-5px);
 }
 
-/* MOBILE */
-@media(max-width:768px){
+#friends img{
+    width:100%;
+    height:180px;
+    object-fit:cover;
+}
 
-    .cover{
-        height:220px;
-    }
+#friends h3{
+    color:white;
+    text-align:center;
+    padding:12px;
+    margin:0;
+}
+/*  */
+/* COVER */
 
-    .profile-pic{
-        width:130px;
-        height:130px;
-        top:-70px;
-    }
+.cover{
+    position:relative;
+    border-radius:20px 20px 0 0;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.12);
+}
 
-    .profile-header{
-        padding-top:75px;
-    }
+/* PROFILE PIC WRAPPER */
 
-    .stats{
-        gap:25px;
-    }
+.profile-pic-wrapper{
+    position:relative;
+}
 
-    .info-section{
-        padding:20px;
-    }
+/* CAMERA BUTTON */
 
-    .gallery{
-        padding:20px;
-    }
+.camera-btn{
+    position:absolute;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:rgba(0,0,0,.7);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    cursor:pointer;
+    font-size:20px;
+
+    opacity:0;
+    transition:.3s;
+}
+
+/* COVER CAMERA */
+
+.cover-camera{
+    bottom:15px;
+    right:15px;
+}
+
+/* PROFILE CAMERA */
+
+.profile-camera{
+    right:10px;
+    bottom:15px;
+}
+
+/* Hover pe hi show */
+
+.cover:hover .cover-camera{
+    opacity:1;
+}
+
+.profile-pic-wrapper:hover .profile-camera{
+    opacity:1;
+}
+
+/* MENU */
+
+.img-menu{
+    position:absolute;
+    right:15px;
+    top:15px;
+
+    background:#5e002c;
+    border-radius:12px;
+
+    overflow:hidden;
+
+    display:none;
+    min-width:140px;
+
+    z-index:100;
+}
+
+.img-menu button{
+    width:100%;
+    border:none;
+    background:transparent;
+    color:white;
+
+    padding:12px;
+    cursor:pointer;
+    text-align:left;
+}
+
+.img-menu button:hover{
+    background:rgba(255,255,255,.1);
+}
+
+.img-menu button:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+}
+.cover-camera{
+    bottom:15px;
+    right:15px;
+}
+
+#coverMenu{
+    position:absolute;
+    right:15px;
+    bottom:70px;   /* camera ke upar */
+    top:auto;
+}
+.requested-btn{
+    position:relative;
+    overflow:hidden;
+    background:#ffbfd0;
+    color:#222;
+    border:none;
+    border-radius:12px;
+    padding:11px 20px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+.requested-btn .hover-text{
+    display:none;
+}
+
+.requested-btn:hover .default-text{
+    display:none;
+}
+
+.requested-btn:hover .hover-text{
+    display:inline;
+    color:#e60023;
+    font-weight:700;
 }

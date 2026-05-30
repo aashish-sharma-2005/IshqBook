@@ -1,160 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= user.name %> | IshqBook</title>
-
+    <title>
+        <%= userInfo.name %> | IshqBook
+    </title>
     <link rel="stylesheet" href="/css/profile.css">
-
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
+
 <body>
 
-<div class="profile-container">
+    <div class="profile">
 
-    <!-- COVER -->
-    <div class="cover">
+        <!-- COVER -->
+        <!-- COVER -->
+        <div class="cover">
 
-        <img
-            src="<%= user.coverPhoto || '/images/default-cover.jpg' %>"
-            alt="Cover">
+            <img src="<%= userInfo.coverPhoto || '/image/cover.jpeg' %>" class="cover-img">
 
-        <div class="cover-overlay"></div>
+            <% if(isOwnProfile){ %>
+                <div class="camera-btn cover-camera" onclick="toggleMenu('coverMenu')">
+                    📷
+                </div>
 
-    </div>
+                <div class="img-menu" id="coverMenu">
+                    <button onclick="uploadCover()">Upload</button>
 
-    <!-- PROFILE HEADER -->
-    <div class="profile-header">
+                    <% if(userInfo.coverPhoto){ %>
+                        <button onclick="deleteCover()">Delete</button>
+                        <% } else { %>
+                            <button disabled>Delete</button>
+                            <% } %>
+                </div>
+                <% } %>
 
-        <img
-            class="profile-pic"
-            src="<%= user.profilePhoto || '/images/default-user.png' %>"
-            alt="Profile">
+        </div>
 
-        <div class="profile-details">
+        <div class="profile-header">
 
-            <h1><%= user.name %></h1>
+            <div class="profile-left">
 
-            <p class="username">
-                @<%= user.username %>
+                <div class="profile-pic-wrapper">
+
+                    <img src="<%= userInfo.profilePic || '/image/profile.png' %>" class="profile-pic">
+
+                    <% if(isOwnProfile){ %>
+                        <div class="camera-btn profile-camera" onclick="toggleMenu('profileMenu')">
+                            📷
+                        </div>
+
+                        <div class="img-menu" id="profileMenu">
+                            <button onclick="uploadProfile()">Upload</button>
+
+                            <% if(userInfo.profilePic){ %>
+                                <button onclick="deleteProfile()">Delete</button>
+                                <% } else { %>
+                                    <button disabled>Delete</button>
+                                    <% } %>
+                        </div>
+                        <% } %>
+
+                </div>
+
+                <div class="profile-details">
+                    <h2>
+                        <%= userInfo.name %>
+                    </h2>
+                    <p>
+                        <%= friendCount %> Friends
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="profile-right">
+
+                <% if(isOwnProfile){ %>
+
+                    <button class="add">Edit Profile</button>
+
+                    <% } else { %>
+                        <% if(!friendship){ %>
+
+                            <button data-id="<%= userInfo._id %>" class="add"
+                                onclick="sendrequest('<%= userInfo._id %>')">
+                                ➕ Add Friend
+                            </button>
+
+                            <% } else if(friendship.status==="pending" ){ %>
+
+                                <% if(friendship.sender.toString()===currentUserId.toString()){ %>
+
+                                    <button data-id="<%= userInfo._id %>" class="requested-btn"
+                                        onclick="cancelRequest('<%= userInfo._id %>')">
+
+                                        <span class="default-text">⏳ Requested</span>
+                                        <span class="hover-text">Cancel Request</span>
+
+                                    </button>
+
+                                    <% } else if(friendship.receiver.toString()===currentUserId.toString()){ %>
+
+                                        <button class="accept" onclick="acceptrequest('<%= userInfo._id %>')">
+
+                                            ✅ Accept
+
+                                        </button>
+
+                                        <% } %>
+
+                                            <% } else if(friendship.status==="accepted" ){ %>
+
+                                                <button class="friends">
+                                                    ✓ Friends
+                                                </button>
+
+                                                <button class="msg">
+                                                    💬 Message
+                                                </button>
+
+                                                <% } %>
+                                                    <% } %>
+
+
+            </div>
+
+        </div>
+
+        <!-- INFO -->
+        <div class="card">
+            <p><b>Friends:</b>
+                <%= friendCount %>
             </p>
-
-            <p class="bio">
-                <%= user.bio || "Welcome to IshqBook ❤️" %>
-            </p>
-
         </div>
 
-        <!-- ACTION BUTTONS -->
-        <div class="profile-actions">
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="active" onclick="showSection('all', this)">All</button>
+            <button onclick="showSection('about', this)">About</button>
+            <button onclick="showSection('friends', this)">Friends</button>
+            <button onclick="showSection('photos', this)">Photos</button>
+            <button onclick="showSection('reels', this)">Reels</button>
+        </div>
 
-            <button class="btn btn-primary">
-                <i class="fas fa-user-plus"></i>
-                Add Friend
-            </button>
+        <div class="content">
 
-            <button class="btn btn-secondary">
-                <i class="fas fa-message"></i>
-                Message
-            </button>
+            <div id="all" class="section">
+                <h3>All Posts Section</h3>
+            </div>
+
+            <div id="about" class="section" style="display:none;">
+                <h3>About Section</h3>
+            </div>
+
+            <div id="friends" class="section" style="display:none;">
+                <h3>Friends List</h3>
+
+                <div>
+                    <% friends.forEach(f=> { %>
+                        <div onclick="profile('<%= f._id %>')">
+                            <img src="<%= f.sender.profilePic || '/image/profile.png' %>">
+                            <h3>
+                                <%= f.sender.name %>
+                            </h3>
+                        </div>
+                        <% }) %>
+                </div>
+            </div>
+
+            <div id="photos" class="section" style="display:none;">
+                <h3>Photos</h3>
+            </div>
+
+            <div id="reels" class="section" style="display:none;">
+                <h3>Reels</h3>
+            </div>
 
         </div>
 
     </div>
 
-    <!-- STATS -->
-    <div class="stats-wrapper">
+    <script>
 
-        <div class="stat-card">
-            <h2><%= postsCount || 0 %></h2>
-            <p>Posts</p>
-        </div>
+        function showSection(id, el) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
 
-        <div class="stat-card">
-            <h2><%= friendsCount || 0 %></h2>
-            <p>Friends</p>
-        </div>
+            document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+        }
+        async function sendrequest(id) {
+            try {
+                const res = await fetch(`/home/send-request/${id}`, {
+                    method: "POST"
+                });
 
-        <div class="stat-card">
-            <h2><%= likesCount || 0 %></h2>
-            <p>Likes</p>
-        </div>
+                const data = await res.json();
 
-    </div>
+                if (data.status) {
+                    const btn = document.querySelector(`button[data-id="${id}"]`);
 
-    <!-- TABS -->
-    <div class="profile-tabs">
+                    btn.className = "requested-btn";
+                    btn.innerHTML = `
+                <span class="default-text">⏳ Requested</span>
+                <span class="hover-text">Cancel Request</span>
+            `;
 
-        <a href="?tab=all"
-           class="tab <%= !tab || tab==='all' ? 'active' : '' %>">
-            <i class="fas fa-border-all"></i>
-            All
-        </a>
+                    btn.setAttribute("onclick", `cancelRequest('${id}')`);
+                }
 
-        <a href="?tab=posts"
-           class="tab <%= tab==='posts' ? 'active' : '' %>">
-            <i class="fas fa-newspaper"></i>
-            Posts
-        </a>
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-        <a href="?tab=friends"
-           class="tab <%= tab==='friends' ? 'active' : '' %>">
-            <i class="fas fa-user-group"></i>
-            Friends
-        </a>
 
-        <a href="?tab=photos"
-           class="tab <%= tab==='photos' ? 'active' : '' %>">
-            <i class="fas fa-image"></i>
-            Photos
-        </a>
+        async function cancelRequest(id) {
+            try {
+                const res = await fetch(`/home/cancel-request/${id}`, {
+                    method: "DELETE"
+                });
 
-        <a href="?tab=reels"
-           class="tab <%= tab==='reels' ? 'active' : '' %>">
-            <i class="fas fa-film"></i>
-            Reels
-        </a>
+                const data = await res.json();
 
-    </div>
+                if (data.status) {
+                    const btn = document.querySelector(`button[data-id="${id}"]`);
 
-    <!-- CONTENT AREA -->
-    <div class="profile-content">
+                    btn.className = "add";
+                    btn.innerHTML = "➕ Add Friend";
 
-        <% if(!tab || tab==="all"){ %>
+                    btn.setAttribute("onclick", `sendrequest('${id}')`);
+                }
 
-            <%- include("./profileTabs/all") %>
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-        <% } %>
 
-        <% if(tab==="posts"){ %>
+        async function acceptrequest(id) {
+            try {
+                const res = await fetch(`/home/accept-request/${id}`, {
+                    method: "PATCH"
+                });
 
-            <%- include("./profileTabs/posts") %>
+                const data = await res.json();
 
-        <% } %>
+                if (data.status) {
 
-        <% if(tab==="friends"){ %>
+                    // page reload
+                    location.reload();
 
-            <%- include("./profileTabs/friends") %>
+                }
 
-        <% } %>
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-        <% if(tab==="photos"){ %>
+        function profile(id) {
+            window.location.href = `/user/profile/${id}`;
+        }
 
-            <%- include("./profileTabs/photos") %>
-
-        <% } %>
-
-        <% if(tab==="reels"){ %>
-
-            <%- include("./profileTabs/reels") %>
-
-        <% } %>
-
-    </div>
-
-</div>
+    </script>
 
 </body>
+<script>
+
+    function toggleMenu(id) {
+
+        document.querySelectorAll('.img-menu').forEach(menu => {
+            if (menu.id !== id) {
+                menu.style.display = 'none';
+            }
+        });
+
+        const menu = document.getElementById(id);
+
+        menu.style.display =
+            menu.style.display === "block"
+                ? "none"
+                : "block";
+    }
+
+    window.onclick = function (e) {
+
+        if (!e.target.closest('.camera-btn') &&
+            !e.target.closest('.img-menu')) {
+
+            document.querySelectorAll('.img-menu')
+                .forEach(menu => {
+                    menu.style.display = 'none';
+                });
+        }
+    }
+
+    /* Upload */
+
+    function uploadCover() {
+        alert("Cover Upload");
+    }
+
+    function uploadProfile() {
+        alert("Profile Upload");
+    }
+
+    /* Delete */
+
+    function deleteCover() {
+        if (confirm("Delete Cover Photo ?")) {
+            // fetch route
+        }
+    }
+
+    function deleteProfile() {
+        if (confirm("Delete Profile Photo ?")) {
+            // fetch route
+        }
+    }
+
+</script>
+
 </html>

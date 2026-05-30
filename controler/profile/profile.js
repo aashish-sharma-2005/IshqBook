@@ -39,7 +39,8 @@ async function getProfile(req,res){
             friends,
             friendCount,
             isOwnProfile,
-            friendship
+            friendship,
+            currentUserId
         });
     } catch (error) {
         console.log(error)
