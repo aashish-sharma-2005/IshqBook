@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Friends - IshqBook</title>
+
+    <link rel="stylesheet" href="/css/friend.css">
+</head>
+
+<body>
+
+    <div class="friends-page">
+
+        <!-- TOP BAR -->
+        <div class="top-bar">
+            <h1>Find Friends</h1>
+
+            <div class="search-box">
+                <input type="text" placeholder="Search users...">
+                <span>🔍</span>
+            </div>
+        </div>
+
+        <% if(users.length> 0) { %>
+
+            <div class="friends-grid">
+
+                <% users.forEach(user=> { %>
+
+                    <div class="friend-card">
+
+                        <div class="cover"></div>
+
+                        <div class="profile-section">
+
+                            <img
+                                src="<%= user.profilePic || 'https://cdn-icons-png.flaticon.com/512/149/149071.png' %>" />
+
+                            <h2>
+                                <%= user.name %>
+                            </h2>
+
+                            <p class="username">@<%= user.username %>
+                            </p>
+
+                            <p class="bio">
+                                <%= user.bio || "No Bio.." %>
+                            </p>
+
+                            <div class="btns">
+
+                                <!-- VIEW PROFILE -->
+                                <a href="/home/profile/<%= user._id %>" class="btn profile-btn">
+                                    👤 View Profile
+                                </a>
+
+                                <% if(user.status==="pending" ) { %>
+
+                                    <% if(user.sender && user.sender.toString()===currentUserId.toString()) { %>
+
+                                        <button data-id="<%= user._id %>" class="btn requested-btn"
+                                            onclick="cancelRequest('<%= user._id %>')">
+                                            <span class="default-text">⏳ Requested</span>
+                                            <span class="hover-text">Cancel Request</span>
+                                        </button>
+
+                                        <% } else if(user.receiver &&
+                                            user.receiver.toString()===currentUserId.toString()) { %>
+
+                                            <button data-id="<%= user._id %>" class="btn accept-btn"
+                                                onclick="acceptrequest('<%= user._id %>')">
+                                                ✅ Accept
+                                            </button>
+
+                                            <% } %>
+
+                                                <% } else { %>
+
+                                                    <button data-id="<%= user._id %>" class="btn add-btn"
+                                                        onclick="sendrequest('<%= user._id %>')">
+                                                        ➕ Add Friend
+                                                    </button>
+
+                                                    <% } %>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <% }) %>
+
+            </div>
+
+            <% } else { %>
+
+                <!-- EMPTY STATE -->
+                <div class="empty-box">
+                    <div class="empty-icon">👥</div>
+                    <h2>No More Users Found</h2>
+                    <p>All users are already in your friend list ❤️</p>
+                </div>
+
+                <% } %>
+
+    </div>
+
+    <script>
+
+        async function sendrequest(id) {
+            try {
+                const res = await fetch(`/home/send-request/${id}`, {
+                    method: "POST"
+                });
+
+                const data = await res.json();
+
+                if (data.status) {
+                    const btn = document.querySelector(`button[data-id="${id}"]`);
+
+                    btn.className = "btn requested-btn";
+                    btn.innerHTML = `
+                <span class="default-text">⏳ Requested</span>
+                <span class="hover-text">Cancel Request</span>
+            `;
+
+                    btn.setAttribute("onclick", `cancelRequest('${id}')`);
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+
+        async function cancelRequest(id) {
+            try {
+                const res = await fetch(`/home/cancel-request/${id}`, {
+                    method: "DELETE"
+                });
+
+                const data = await res.json();
+
+                if (data.status) {
+                    const btn = document.querySelector(`button[data-id="${id}"]`);
+
+                    btn.className = "btn add-btn";
+                    btn.innerHTML = "➕ Add Friend";
+
+                    btn.setAttribute("onclick", `sendrequest('${id}')`);
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+
+        async function acceptrequest(id) {
+            try {
+                const res = await fetch(`/home/accept-request/${id}`, {
+                    method: "PATCH"
+                });
+
+                const data = await res.json();
+
+                if (data.status) {
+
+                    // page reload
+                    location.reload();
+
+                }
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

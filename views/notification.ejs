@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+
+    <link rel="stylesheet" href="/css/notification.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="notification-page">
+
+        <div class="top-bar">
+            <h2>
+                <i class="fa-solid fa-bell"></i>
+                Notifications
+            </h2>
+        </div>
+
+        <div class="notification-container">
+
+            <% if(data.length> 0){ %>
+
+                <% data.forEach(i=> { %>
+
+                    <div class="notification-card <%= i.isRead ? '' : 'unread' %>">
+
+                        <div class="left">
+                            <img src="<%= i.notifier.profile || `/image/profile.png` %>" alt="profile">
+                        </div>
+
+                        <div class="center">
+
+                            <p>
+                                <span>
+                                    <a href="/home/profile/<%= i.notifier._id %>">
+                                        <%= i.notifier.username %>
+                                    </a>
+                                </span>
+
+                                <% if(i.type==='request_receive' ){ %>
+                                    sent you a friend request.
+                                    <% } %>
+
+                                        <% if(i.type==='request_accept' ){ %>
+                                            accepted your friend request.
+                                            <% } %>
+
+                                                <% if(i.type==='profile_visit' ){ %>
+                                                    visited your profile.
+                                                    <% } %>
+
+                                                        <% if(i.type==='like' ){ %>
+                                                            liked your post.
+                                                            <% } %>
+
+                                                                <% if(i.type==='comment' ){ %>
+                                                                    commented on your post.
+                                                                    <% } %>
+
+                                                                        <% if(i.type==='reply' ){ %>
+                                                                            replied to your comment.
+                                                                            <% } %>
+
+                                                                                <% if(i.type==='follow' ){ %>
+                                                                                    started following you.
+                                                                                    <% } %>
+
+                                                                                        <% if(i.type==='message' ){ %>
+                                                                                            sent you a message.
+                                                                                            <% } %>
+                            </p>
+
+                            <small>
+                                <%= new Date(i.createdAt).toLocaleTimeString([],{ hour:"2-digit", minute:"2-digit" }) %>
+                            </small>
+
+                        </div>
+
+                        <div class="right">
+                            <% if(!i.isRead){ %>
+                                <div class="dot"></div>
+                                <div class="right">
+
+                                    <% if(!i.isRead){ %>
+                                        <div class="dot"></div>
+
+                                        <button class="mark-read-btn" onclick="markRead('<%= i._id %>')">
+                                            Mark Read
+                                        </button>
+                                        <% } %>
+
+                                </div>
+                                <% } %>
+                        </div>
+
+                    </div>
+
+                    <% }) %>
+
+                        <% } else { %>
+
+                            <div class="empty">
+                                <i class="fa-regular fa-bell-slash"></i>
+                                <h3>No Notifications</h3>
+                            </div>
+
+                            <% } %>
+
+        </div>
+
+    </div>
+
+</body>
+<script>
+    function markRead(id){
+        try {
+            fetch(`/home/notifications/${id}`,{
+                method:"PATCH"
+            })
+            .then(res=>res.json())
+            .then(res=>{
+                if(res.status) location.reload();
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+</script>
+
+</html>

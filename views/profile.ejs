@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= user.name %> | IshqBook</title>
+
+    <link rel="stylesheet" href="/css/profile.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+<div class="profile-container">
+
+    <!-- COVER -->
+    <div class="cover">
+
+        <img
+            src="<%= user.coverPhoto || '/images/default-cover.jpg' %>"
+            alt="Cover">
+
+        <div class="cover-overlay"></div>
+
+    </div>
+
+    <!-- PROFILE HEADER -->
+    <div class="profile-header">
+
+        <img
+            class="profile-pic"
+            src="<%= user.profilePhoto || '/images/default-user.png' %>"
+            alt="Profile">
+
+        <div class="profile-details">
+
+            <h1><%= user.name %></h1>
+
+            <p class="username">
+                @<%= user.username %>
+            </p>
+
+            <p class="bio">
+                <%= user.bio || "Welcome to IshqBook ❤️" %>
+            </p>
+
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="profile-actions">
+
+            <button class="btn btn-primary">
+                <i class="fas fa-user-plus"></i>
+                Add Friend
+            </button>
+
+            <button class="btn btn-secondary">
+                <i class="fas fa-message"></i>
+                Message
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-wrapper">
+
+        <div class="stat-card">
+            <h2><%= postsCount || 0 %></h2>
+            <p>Posts</p>
+        </div>
+
+        <div class="stat-card">
+            <h2><%= friendsCount || 0 %></h2>
+            <p>Friends</p>
+        </div>
+
+        <div class="stat-card">
+            <h2><%= likesCount || 0 %></h2>
+            <p>Likes</p>
+        </div>
+
+    </div>
+
+    <!-- TABS -->
+    <div class="profile-tabs">
+
+        <a href="?tab=all"
+           class="tab <%= !tab || tab==='all' ? 'active' : '' %>">
+            <i class="fas fa-border-all"></i>
+            All
+        </a>
+
+        <a href="?tab=posts"
+           class="tab <%= tab==='posts' ? 'active' : '' %>">
+            <i class="fas fa-newspaper"></i>
+            Posts
+        </a>
+
+        <a href="?tab=friends"
+           class="tab <%= tab==='friends' ? 'active' : '' %>">
+            <i class="fas fa-user-group"></i>
+            Friends
+        </a>
+
+        <a href="?tab=photos"
+           class="tab <%= tab==='photos' ? 'active' : '' %>">
+            <i class="fas fa-image"></i>
+            Photos
+        </a>
+
+        <a href="?tab=reels"
+           class="tab <%= tab==='reels' ? 'active' : '' %>">
+            <i class="fas fa-film"></i>
+            Reels
+        </a>
+
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="profile-content">
+
+        <% if(!tab || tab==="all"){ %>
+
+            <%- include("./profileTabs/all") %>
+
+        <% } %>
+
+        <% if(tab==="posts"){ %>
+
+            <%- include("./profileTabs/posts") %>
+
+        <% } %>
+
+        <% if(tab==="friends"){ %>
+
+            <%- include("./profileTabs/friends") %>
+
+        <% } %>
+
+        <% if(tab==="photos"){ %>
+
+            <%- include("./profileTabs/photos") %>
+
+        <% } %>
+
+        <% if(tab==="reels"){ %>
+
+            <%- include("./profileTabs/reels") %>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+</body>
+</html>
