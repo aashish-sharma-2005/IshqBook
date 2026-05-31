@@ -18,7 +18,7 @@
         <!-- COVER -->
         <div class="cover">
 
-            <img src="<%= userInfo.coverPhoto || '/image/cover.jpeg' %>" class="cover-img">
+            <img src="<%= userInfo.coverPhoto.url || '/image/cover.jpeg' %>" class="cover-img">
 
             <% if(isOwnProfile){ %>
                 <div class="camera-btn cover-camera" onclick="toggleMenu('coverMenu')">
@@ -26,13 +26,22 @@
                 </div>
 
                 <div class="img-menu" id="coverMenu">
-                    <button onclick="uploadCover()">Upload</button>
 
-                    <% if(userInfo.coverPhoto){ %>
-                        <button onclick="deleteCover()">Delete</button>
+                    <button onclick="uploadCover()">
+                        Upload
+                    </button>
+                    <input type="file" id="coverInput" accept="image/*" hidden>
+
+                    <% if(userInfo.coverPhoto.url){ %>
+                        <button onclick="deleteCover()">
+                            Delete
+                        </button>
                         <% } else { %>
-                            <button disabled>Delete</button>
+                            <button disabled>
+                                Delete
+                            </button>
                             <% } %>
+
                 </div>
                 <% } %>
 
@@ -44,7 +53,7 @@
 
                 <div class="profile-pic-wrapper">
 
-                    <img src="<%= userInfo.profilePic || '/image/profile.png' %>" class="profile-pic">
+                    <img src="<%= userInfo.profilePic.url || '/image/profile.png' %>" class="profile-pic">
 
                     <% if(isOwnProfile){ %>
                         <div class="camera-btn profile-camera" onclick="toggleMenu('profileMenu')">
@@ -52,13 +61,17 @@
                         </div>
 
                         <div class="img-menu" id="profileMenu">
-                            <button onclick="uploadProfile()">Upload</button>
 
-                            <% if(userInfo.profilePic){ %>
+                            <button onclick="uploadProfile()">
+                                Upload
+                            </button>
+                            <input type="file" id="profileInput" accept="image/*" hidden>
+                            <% if(userInfo.profilePic.url){ %>
                                 <button onclick="deleteProfile()">Delete</button>
                                 <% } else { %>
                                     <button disabled>Delete</button>
                                     <% } %>
+
                         </div>
                         <% } %>
 
@@ -161,7 +174,7 @@
                 <div>
                     <% friends.forEach(f=> { %>
                         <div onclick="profile('<%= f._id %>')">
-                            <img src="<%= f.sender.profilePic || '/image/profile.png' %>">
+                            <img src="<%= f.sender.profilePic.url || '/image/profile.png' %>">
                             <h3>
                                 <%= f.sender.name %>
                             </h3>
@@ -181,93 +194,87 @@
         </div>
 
     </div>
+</body>
+<script>
+    function showSection(id, el) {
+        document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+        document.getElementById(id).style.display = 'block';
 
-    <script>
+        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+    async function sendrequest(id) {
+        try {
+            const res = await fetch(`/home/send-request/${id}`, {
+                method: "POST"
+            });
 
-        function showSection(id, el) {
-            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
-            document.getElementById(id).style.display = 'block';
+            const data = await res.json();
 
-            document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-        }
-        async function sendrequest(id) {
-            try {
-                const res = await fetch(`/home/send-request/${id}`, {
-                    method: "POST"
-                });
+            if (data.status) {
+                const btn = document.querySelector(`button[data-id="${id}"]`);
 
-                const data = await res.json();
-
-                if (data.status) {
-                    const btn = document.querySelector(`button[data-id="${id}"]`);
-
-                    btn.className = "requested-btn";
-                    btn.innerHTML = `
+                btn.className = "requested-btn";
+                btn.innerHTML = `
                 <span class="default-text">⏳ Requested</span>
                 <span class="hover-text">Cancel Request</span>
             `;
 
-                    btn.setAttribute("onclick", `cancelRequest('${id}')`);
-                }
-
-            } catch (error) {
-                console.log(error);
+                btn.setAttribute("onclick", `cancelRequest('${id}')`);
             }
+
+        } catch (error) {
+            console.log(error);
         }
+    }
 
 
-        async function cancelRequest(id) {
-            try {
-                const res = await fetch(`/home/cancel-request/${id}`, {
-                    method: "DELETE"
-                });
+    async function cancelRequest(id) {
+        try {
+            const res = await fetch(`/home/cancel-request/${id}`, {
+                method: "DELETE"
+            });
 
-                const data = await res.json();
+            const data = await res.json();
 
-                if (data.status) {
-                    const btn = document.querySelector(`button[data-id="${id}"]`);
+            if (data.status) {
+                const btn = document.querySelector(`button[data-id="${id}"]`);
 
-                    btn.className = "add";
-                    btn.innerHTML = "➕ Add Friend";
+                btn.className = "add";
+                btn.innerHTML = "➕ Add Friend";
 
-                    btn.setAttribute("onclick", `sendrequest('${id}')`);
-                }
-
-            } catch (error) {
-                console.log(error);
+                btn.setAttribute("onclick", `sendrequest('${id}')`);
             }
+
+        } catch (error) {
+            console.log(error);
         }
+    }
 
 
-        async function acceptrequest(id) {
-            try {
-                const res = await fetch(`/home/accept-request/${id}`, {
-                    method: "PATCH"
-                });
+    async function acceptrequest(id) {
+        try {
+            const res = await fetch(`/home/accept-request/${id}`, {
+                method: "PATCH"
+            });
 
-                const data = await res.json();
+            const data = await res.json();
 
-                if (data.status) {
+            if (data.status) {
 
-                    // page reload
-                    location.reload();
+                // page reload
+                location.reload();
 
-                }
-
-            } catch (error) {
-                console.log(error);
             }
+
+        } catch (error) {
+            console.log(error);
         }
+    }
 
-        function profile(id) {
-            window.location.href = `/user/profile/${id}`;
-        }
-
-    </script>
-
-</body>
-<script>
+    function profile(id) {
+        window.location.href = `/user/profile/${id}`;
+    }
 
     function toggleMenu(id) {
 
@@ -300,24 +307,103 @@
     /* Upload */
 
     function uploadCover() {
-        alert("Cover Upload");
+        const input = document.getElementById("coverInput");
+        if (input) input.click();
     }
 
     function uploadProfile() {
-        alert("Profile Upload");
+        const input = document.getElementById("profileInput");
+        if (input) input.click();
     }
 
+    const coverInput = document.getElementById("coverInput");
+
+    if (coverInput) {
+        coverInput.addEventListener("change", async function () {
+
+            const file = this.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("coverPhoto", file);
+
+            const res = await fetch("/home/profile/upload-cover", {
+                method: "PATCH",
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if (data.status) {
+                location.reload();
+            }
+        });
+    }
+
+    const profileInput = document.getElementById("profileInput");
+
+    if (profileInput) {
+        profileInput.addEventListener("change", async function () {
+
+            const file = this.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("profilePic", file);
+
+            const res = await fetch("/home/profile/upload-profile", {
+                method: "PATCH",
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if (data.status) {
+                location.reload();
+            }
+        });
+    }
     /* Delete */
 
-    function deleteCover() {
-        if (confirm("Delete Cover Photo ?")) {
-            // fetch route
+    async function deleteCover() {
+
+        if (!confirm("Delete Cover Photo ?")) return;
+
+        try {
+
+            const res = await fetch("/home/profile/delete-cover", {
+                method: "DELETE"
+            });
+
+            const data = await res.json();
+
+            if (data.status) {
+                location.reload();
+            }
+
+        } catch (error) {
+            console.log(error);
         }
     }
 
-    function deleteProfile() {
-        if (confirm("Delete Profile Photo ?")) {
-            // fetch route
+    async function deleteProfile() {
+
+        if (!confirm("Delete Profile Photo ?")) return;
+
+        try {
+
+            const res = await fetch("/home/profile/delete-profile", {
+                method: "DELETE"
+            });
+
+            const data = await res.json();
+
+            if (data.status) {
+                location.reload();
+            }
+
+        } catch (error) {
+            console.log(error);
         }
     }
 

@@ -30,7 +30,7 @@
                     <div class="notification-card <%= i.isRead ? '' : 'unread' %>">
 
                         <div class="left">
-                            <img src="<%= i.notifier.profile || `/image/profile.png` %>" alt="profile">
+                            <img src="<%= i.notifier.profile.url || `/image/profile.png` %>" alt="profile">
                         </div>
 
                         <div class="center">

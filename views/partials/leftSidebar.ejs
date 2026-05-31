@@ -1,8 +1,8 @@
 <div class="left-sidebar">
 
-    <div class="menu-item">
+    <div onclick="location.href='/home/profile/<%= user.userid %>'" class="menu-item">
         <i class="fa fa-user"></i>
-        <span onclick="location.href='/home/profile/<%= user.userid %>'"><%= user.name %></span>
+        <span><%= user.name %></span>
     </div>
 
     <div class="menu-item">

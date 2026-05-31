@@ -26,7 +26,7 @@
     </div>
 
     <div class="profile-menu">
-        <img src="<%= user.profilePic || '/image/profile.png' %>" alt="<%= user.name %>" id="profileBtn">
+        <img src="<%= user.profilePic.url || '/image/profile.png' %>" alt="<%= user.name %>" id="profileBtn">
 
         <div class="dropdown" id="dropdownMenu">
             <a href="/home/profile/<%= user.userid %>">
