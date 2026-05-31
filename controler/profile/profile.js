@@ -52,27 +52,15 @@ async function getProfile(req,res){
 async function uploadCover(req, res) {
     let uploadedPublicId = null;
     try {
-        console.log(req.file);
-        if (!req.file) {
-            return res.status(400).json({
-                status: false,
-                message: "No file uploaded"
-            });
-        }
+        if (!req.file) return res.status(400).json({status: false,message: "No file uploaded"});
         uploadedPublicId = req.file.filename;
         const user = await User.findById(req.user.userid);
         if (!user) {
             await cloudinary.uploader.destroy(uploadedPublicId);
-            return res.status(404).json({
-                status: false,
-                message: "User not found"
-            });
+            return res.status(404).json({status: false,message: "User not found"});
         }
         const oldPublicId = user.coverPhoto?.publicId;
-        user.coverPhoto = {
-            url: req.file.path,
-            publicId: req.file.filename
-        };
+        user.coverPhoto = {url: req.file.path,publicId: req.file.filename};
         await user.save();
         // DB save ho gaya, to ib purani image dalete do
         if (oldPublicId) {
@@ -82,10 +70,7 @@ async function uploadCover(req, res) {
                 console.log("Old cover delete error:", err);
             }
         }
-        return res.json({
-            status: true,
-            coverPhoto: user.coverPhoto.url
-        });
+        return res.json({status: true,coverPhoto: user.coverPhoto.url});
     } catch (err) {
         console.log(err);
         // Nayi upload hui thi lekin DB fail ho gaya
@@ -96,18 +81,36 @@ async function uploadCover(req, res) {
                 console.log(deleteErr);
             }
         }
-        return res.status(500).json({
-            status: false,
-            message: "Cover upload failed"
-        });
+        return res.status(500).json({status: false,message: "Cover upload failed"});
     }
 }
 
-function uploadProfile(req,res){
+async function uploadProfile(req, res) {
+    let uploadedPublicId = null;
     try {
-        
+        if (!req.file) return res.status(400).json({ status: false, message: "No file upload" });
+        uploadedPublicId = req.file.filename;
+        const user = await User.findById(req.user.userid);
+        if (!user) {
+            await cloudinary.uploader.destroy(uploadedPublicId);
+            return res.status(404).json({ status: false, message: "User Not Found" });
+        }
+        const oldPublicId = user.profilePic?.publicId;
+        user.profilePic = {url: req.file.path,publicId: uploadedPublicId};
+        await user.save();
+        // delete old image after successful save
+        if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
+        return res.json({status: true,profilePic: user.profilePic.url});
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        if (uploadedPublicId) {
+            try {
+                await cloudinary.uploader.destroy(uploadedPublicId);
+            } catch (err) {
+                console.log("Cloud delete error:", err);
+            }
+        }
+        return res.status(500).json({status: false,message: "profile upload failed"});
     }
 }
 
@@ -142,11 +145,49 @@ async function deleteCover(req, res) {
     }
 }
 
-function deleteProfile(req,res){
+async function deleteProfile(req, res) {
     try {
-        
+        const userid = req.user.userid;
+
+        const user = await User.findById(userid);
+
+        if (!user) {
+            return res.status(404).json({
+                status: false,
+                message: "User not found"
+            });
+        }
+
+        if (!user.profilePic?.publicId) {
+            return res.status(400).json({
+                status: false,
+                message: "Profile picture not found"
+            });
+        }
+
+        const publicId = user.profilePic.publicId;
+        // 1. delete from cloudinary first
+        await cloudinary.uploader.destroy(publicId);
+
+        // 2. remove from DB
+        user.profilePic = {
+            url: "",
+            publicId: ""
+        };
+
+        await user.save();
+
+        return res.status(200).json({
+            status: true,
+            message: "Profile picture deleted"
+        });
+
     } catch (error) {
-        console.log(error)
+        console.log(error);
+        return res.status(500).json({
+            status: false,
+            message: "Server Error"
+        });
     }
 }
 
