@@ -337,3 +337,91 @@ body{
     color:#e60023;
     font-weight:700;
 }
+
+
+.profile-loader{
+    position:absolute;
+    top:-90px;
+    left:0;
+
+    width:180px;
+    height:180px;
+
+    border-radius:50%;
+    display:none;
+
+    pointer-events:none;
+    z-index:20;
+}
+
+.profile-loader::before{
+    content:"";
+
+    position:absolute;
+    inset:-8px;
+
+    border-radius:50%;
+
+    border:5px solid transparent;
+
+    border-top-color:#ff5d8f;
+    border-right-color:#ff8fb1;
+
+    animation:ringSpin .8s linear infinite;
+}
+
+.profile-loader::after{
+    content:"";
+
+    position:absolute;
+    inset:-8px;
+
+    border-radius:50%;
+
+    box-shadow:
+        0 0 15px rgba(255,93,143,.7),
+        0 0 30px rgba(255,93,143,.35);
+}
+
+.profile-pic.uploading{
+    opacity:.55;
+}
+
+.profile-camera{
+    z-index:30;
+}
+
+@keyframes ringSpin{
+    from{
+        transform:rotate(0deg);
+    }
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* cover  */
+.cover{
+    position: relative;
+}
+
+.cover-loader-content{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:70px;
+    height:70px;
+    border:6px solid rgba(255,255,255,.4);
+    border-top:6px solid #fff;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    display:none;
+    z-index:100;
+}
+
+@keyframes spin{
+    100%{
+        transform:translate(-50%,-50%) rotate(360deg);
+    }
+}

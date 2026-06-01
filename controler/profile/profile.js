@@ -100,7 +100,7 @@ async function uploadProfile(req, res) {
         await user.save();
         // delete old image after successful save
         if (oldPublicId) await cloudinary.uploader.destroy(oldPublicId);
-        return res.json({status: true,profilePic: user.profilePic.url});
+        return res.json({status: true,url: user.profilePic.url});
     } catch (error) {
         console.log(error);
         if (uploadedPublicId) {

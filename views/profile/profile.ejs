@@ -17,7 +17,7 @@
         <!-- COVER -->
         <!-- COVER -->
         <div class="cover">
-
+            <div class="cover-loader-content" id="coverLoader"></div>
             <img src="<%= userInfo.coverPhoto.url || '/image/cover.jpeg' %>" class="cover-img">
 
             <% if(isOwnProfile){ %>
@@ -52,8 +52,9 @@
             <div class="profile-left">
 
                 <div class="profile-pic-wrapper">
-
-                    <img src="<%= userInfo.profilePic.url || '/image/profile.png' %>" class="profile-pic">
+                    <div class="profile-loader" id="profileLoader"></div>
+                    <img src="<%= userInfo.profilePic.url || '/image/profile.png' %>" class="profile-pic"
+                        id="profilePic">
 
                     <% if(isOwnProfile){ %>
                         <div class="camera-btn profile-camera" onclick="toggleMenu('profileMenu')">
@@ -69,7 +70,10 @@
                             <% if(userInfo.profilePic.url){ %>
                                 <button onclick="deleteProfile()">Delete</button>
                                 <% } else { %>
-                                    <button disabled>Delete</button>
+                                    <button id="deleteProfileBtn" onclick="deleteProfile()" <%=userInfo.profilePic.url
+                                        ? '' : 'disabled' %>>
+                                        Delete
+                                    </button>
                                     <% } %>
 
                         </div>
@@ -296,11 +300,13 @@
     /* Upload */
 
     function uploadCover() {
+        document.getElementById("coverMenu").style.display = "none";
         const input = document.getElementById("coverInput");
         if (input) input.click();
     }
 
     function uploadProfile() {
+        document.getElementById("profileMenu").style.display = "none";
         const input = document.getElementById("profileInput");
         if (input) input.click();
     }
@@ -312,7 +318,9 @@
 
             const file = this.files[0];
             if (!file) return;
+            const coverLoader = document.getElementById("coverLoader");
 
+            coverLoader.style.display = "flex";
             const formData = new FormData();
             formData.append("coverPhoto", file);
 
@@ -333,22 +341,47 @@
 
     if (profileInput) {
         profileInput.addEventListener("change", async function () {
-
+            document.getElementById("profileMenu").style.display = "none";
             const file = this.files[0];
             if (!file) return;
+            const loader = document.getElementById("profileLoader");
+            const cameraBtn = document.querySelector(".profile-camera");
+
+            // START LOADING
+            loader.style.display = "block";
+
+            if (cameraBtn) {
+                cameraBtn.style.display = "none";
+            }
 
             const formData = new FormData();
             formData.append("profilePic", file);
 
-            const res = await fetch("/home/profile/upload-profile", {
-                method: "PATCH",
-                body: formData
-            });
+            try {
 
-            const data = await res.json();
+                const res = await fetch("/home/profile/upload-profile", {
+                    method: "PATCH",
+                    body: formData
+                });
 
-            if (data.status) {
-                location.reload();
+                const data = await res.json();
+
+                if (data.status) {
+                    profilePic.src = data.url;
+                    document.getElementById("deleteProfileBtn").disabled = false;
+                    loader.style.display = "none";
+                    if (cameraBtn) cameraBtn.style.display = "flex";
+                }
+
+            } catch (error) {
+                console.log(error);
+
+                // ERROR PE LOADER HATAO
+                loader.style.display = "none";
+
+                if (cameraBtn) {
+                    cameraBtn.style.display = "flex";
+                }
             }
         });
     }
@@ -356,7 +389,18 @@
 
     async function deleteCover() {
 
+        document.getElementById("coverMenu").style.display = "none";
+
         if (!confirm("Delete Cover Photo ?")) return;
+
+        const coverLoader = document.getElementById("coverLoader");
+        const cameraBtn = document.querySelector(".cover-camera");
+
+        coverLoader.style.display = "flex";
+
+        if (cameraBtn) {
+            cameraBtn.style.display = "none";
+        }
 
         try {
 
@@ -371,13 +415,31 @@
             }
 
         } catch (error) {
+
             console.log(error);
+
+            coverLoader.style.display = "none";
+
+            if (cameraBtn) {
+                cameraBtn.style.display = "flex";
+            }
         }
     }
 
     async function deleteProfile() {
 
+        document.getElementById("profileMenu").style.display = "none";
+
         if (!confirm("Delete Profile Photo ?")) return;
+
+        const loader = document.getElementById("profileLoader");
+        const cameraBtn = document.querySelector(".profile-camera");
+
+        loader.style.display = "block";
+
+        if (cameraBtn) {
+            cameraBtn.style.display = "none";
+        }
 
         try {
 
@@ -392,7 +454,14 @@
             }
 
         } catch (error) {
+
             console.log(error);
+
+            loader.style.display = "none";
+
+            if (cameraBtn) {
+                cameraBtn.style.display = "flex";
+            }
         }
     }
 
