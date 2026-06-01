@@ -39,7 +39,7 @@
         <% } else if(page==="notification"){ %>
             <%-include('notification',{data}) %>
         <% } else if(page==="profile") { %>
-            <%- include("profile",{userInfo,friends,friendCount,isOwnProfile,friendship,currentUserId}) %>
+            <%- include("profile/profile",{userInfo,friends,friendCount,isOwnProfile,friendship,currentUserId}) %>
         <% } %> 
 
         <!-- RIGHT -->

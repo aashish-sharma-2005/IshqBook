@@ -161,34 +161,23 @@
         <div class="content">
 
             <div id="all" class="section">
-                <h3>All Posts Section</h3>
+                <%- include('all') %>
             </div>
 
             <div id="about" class="section" style="display:none;">
-                <h3>About Section</h3>
+                <%- include('about') %>
             </div>
 
             <div id="friends" class="section" style="display:none;">
-                <h3>Friends List</h3>
-
-                <div>
-                    <% friends.forEach(f=> { %>
-                        <div onclick="profile('<%= f._id %>')">
-                            <img src="<%= f.sender.profilePic.url || '/image/profile.png' %>">
-                            <h3>
-                                <%= f.sender.name %>
-                            </h3>
-                        </div>
-                        <% }) %>
-                </div>
+                <%- include('friends') %>
             </div>
 
             <div id="photos" class="section" style="display:none;">
-                <h3>Photos</h3>
+                <%- include('photos') %>
             </div>
 
             <div id="reels" class="section" style="display:none;">
-                <h3>Reels</h3>
+                <%- include('reels') %>
             </div>
 
         </div>
@@ -273,7 +262,7 @@
     }
 
     function profile(id) {
-        window.location.href = `/user/profile/${id}`;
+        window.location.href = `/home/profile/${id}`;
     }
 
     function toggleMenu(id) {

@@ -1,0 +1,191 @@
+<div class="about-wrapper">
+
+    <div class="about-card">
+        <div class="card-header">
+            <i class="fa-solid fa-circle-info"></i>
+            <h3>Intro</h3>
+        </div>
+
+        <% if(userInfo.bio){ %>
+            <p class="bio">
+                <%= userInfo.bio %>
+            </p>
+        <% } else { %>
+            <p class="empty-text">No bio added yet.</p>
+        <% } %>
+    </div>
+
+    <div class="about-card">
+        <div class="card-header">
+            <i class="fa-solid fa-user"></i>
+            <h3>Profile Information</h3>
+        </div>
+
+        <div class="info-list">
+
+            <% if(userInfo.work){ %>
+                <div class="info-item">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>
+                        Works at
+                        <strong><%= userInfo.work %></strong>
+                    </span>
+                </div>
+            <% } %>
+
+            <% if(userInfo.education){ %>
+                <div class="info-item">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>
+                        Studied at
+                        <strong><%= userInfo.education %></strong>
+                    </span>
+                </div>
+            <% } %>
+
+            <% if(userInfo.location){ %>
+                <div class="info-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>
+                        Lives in
+                        <strong><%= userInfo.location %></strong>
+                    </span>
+                </div>
+            <% } %>
+
+            <% if(userInfo.email){ %>
+                <div class="info-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span><%= userInfo.email %></span>
+                </div>
+            <% } %>
+
+            <div class="info-item">
+                <i class="fa-solid fa-calendar"></i>
+                <span>
+                    Joined
+                    <strong>
+                        <% if(userInfo.createdAt){ %>
+                            <%= new Date(userInfo.createdAt).toLocaleDateString(
+                                "en-IN",
+                                {
+                                    day: "numeric",
+                                    month: "long",
+                                    year: "numeric"
+                                }
+                            ) %>
+                        <% } else { %>
+                            Not Available
+                        <% } %>
+                    </strong>
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+    .about-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .about-card {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 18px;
+        padding: 22px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-header i {
+        color: #ff7ca8;
+        font-size: 22px;
+    }
+
+    .card-header h3 {
+        margin: 0;
+        font-size: 20px;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .bio {
+        text-align: center;
+        font-size: 15px;
+        color: #f3f3f3;
+        line-height: 1.8;
+    }
+
+    .empty-text {
+        text-align: center;
+        color: #cfcfcf;
+        padding: 25px 0;
+    }
+
+    .info-list {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        transition: all .3s ease;
+    }
+
+    .info-item:hover {
+        transform: translateX(5px);
+        background: rgba(255, 255, 255, 0.09);
+    }
+
+    .info-item i {
+        width: 24px;
+        text-align: center;
+        color: #ff7ca8;
+        font-size: 18px;
+    }
+
+    .info-item span {
+        color: #f5f5f5;
+        font-size: 15px;
+    }
+
+    .info-item strong {
+        color: #ffffff;
+        font-weight: 600;
+    }
+
+    @media(max-width:768px) {
+        .about-card {
+            padding: 18px;
+        }
+
+        .card-header h3 {
+            font-size: 18px;
+        }
+
+        .info-item {
+            padding: 12px;
+        }
+    }
+</style>

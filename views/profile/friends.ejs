@@ -1,0 +1,12 @@
+<h3>Friends List</h3>
+
+<div>
+    <% friends.forEach(f=> { %>
+        <div onclick="profile('<%= f._id %>')">
+            <img src="<%= f.sender.profilePic.url || '/image/profile.png' %>">
+            <h3>
+                <%= f.sender.name %>
+            </h3>
+        </div>
+        <% }) %>
+</div>
