@@ -1,12 +1,12 @@
 <h3>Friends List</h3>
-
 <div>
     <% friends.forEach(f=> { %>
-        <div onclick="profile('<%= f._id %>')">
-            <img src="<%= f.sender.profilePic.url || '/image/profile.png' %>">
-            <h3>
-                <%= f.sender.name %>
-            </h3>
-        </div>
-        <% }) %>
+        <% const friend=f.sender._id.toString()===currentUserId.toString() ? f.receiver : f.sender; %>
+            <div onclick="location.href='/home/profile/<%= friend._id %>'">
+                <img src="<%= friend.profilePic?.url || '/image/profile.png' %>">
+                <h3>
+                    <%= friend.name %>
+                </h3>
+            </div>
+            <% }) %>
 </div>

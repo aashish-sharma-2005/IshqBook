@@ -576,3 +576,29 @@ body::after{
     justify-content: center;
     border: 2px solid #2b0a3d;
 }
+
+/* active navbar */
+.nav-center a{
+    position: relative;
+    color: #ffc2d1;
+    transition: 0.3s;
+}
+
+.nav-center a.active i{
+    color:  #ffd6e7;
+    text-shadow: 0 0 15px hotpink;
+    transform: scale(1.15);
+}
+
+.nav-center a.active::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -18px;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 3px;
+    border-radius: 20px;
+    background: #ff8fab;
+    box-shadow: 0 0 10px hotpink;
+}

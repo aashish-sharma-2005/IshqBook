@@ -10,9 +10,15 @@
     </div>
 
     <div class="nav-center">
-        <a href="/home"><i class="fa-solid fa-house"></i></a>
-        <a href="/home/friends"><i class="fa-solid fa-user-group"></i></a>
-        <a href="/home/notifications" class="nav-icon">
+        <a href="/home" class="<%= page === 'home' ? 'active' : '' %>">
+            <i class="fa-solid fa-house"></i>
+        </a>
+
+        <a href="/home/friends" class="<%= page === 'friend' ? 'active' : '' %>">
+            <i class="fa-solid fa-user-group"></i>
+        </a>
+
+        <a href="/home/notifications" class="nav-icon <%= page === 'notification' ? 'active' : '' %>">
             <i class="fa-solid fa-bell"></i>
 
             <% if(notificationCount> 0){ %>
@@ -21,8 +27,11 @@
                 </span>
                 <% } %>
         </a>
-        <a href="#"><i class="fa-solid fa-video"></i></a>
-        <!-- <a href="#">🛒</a> -->
+
+        <a href="#" class="<%= page === 'video' ? 'active' : '' %>">
+            <i class="fa-solid fa-video"></i>
+        </a>
+        
     </div>
 
     <div class="profile-menu">

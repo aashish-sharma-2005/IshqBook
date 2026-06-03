@@ -3,6 +3,7 @@ const router = express.Router()
 const {getLogin,postLogin} = require("../controler/auth/login")
 const {getSignup,postSignup,sendOtp,verifyOtp} = require("../controler/auth/signup")
 const {logout} = require("../controler/auth/logout")
+const {getForgotPassword,postForgotPassword,sendforgotOtp,verifyForgotOtp,resetPassword} = require("../controler/auth/forgot")
 
 router.get('/',(req,res)=>{res.redirect('/auth/login')})
 router.get('/login',getLogin)
@@ -12,5 +13,9 @@ router.post('/signup',postSignup)
 router.post('/send-otp',sendOtp)
 router.post('/verify-otp',verifyOtp)
 router.get('/logout',logout)
+router.get('/forgot-password',getForgotPassword)
+router.post('/forgot-otpSend',sendforgotOtp)
+router.post('/forgot-verify-otp',verifyForgotOtp)
+router.post('/reset-password',resetPassword)
 
 module.exports = router;

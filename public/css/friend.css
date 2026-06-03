@@ -66,12 +66,12 @@ body{
    SEARCH BOX
 ========================= */
 
-.search-box{
+.friends-search-box{
     position:relative;
     width:310px;
 }
 
-.search-box input{
+.friends-search-box input{
     width:100%;
 
     padding:13px 52px 13px 16px;
@@ -92,19 +92,19 @@ body{
     transition:0.3s ease;
 }
 
-.search-box input:focus{
+.friends-search-box input:focus{
     border-color:#ff4d6d;
 
     box-shadow:
     0 0 16px rgba(255,77,109,0.35);
 }
 
-.search-box input::placeholder{
+.friends-search-box input::placeholder{
     color:#d1d1d1;
 }
 
 /* Search Emoji */
-.search-box span{
+.friends-search-box span{
     position:absolute;
 
     right:18px;
@@ -120,7 +120,6 @@ body{
 /* =========================
    GRID
 ========================= */
-
 .friends-grid{
     display:grid;
 
@@ -495,7 +494,7 @@ body{
         font-size:34px;
     }
 
-    .search-box{
+    .friends-search-box{
         width:100%;
     }
 }
