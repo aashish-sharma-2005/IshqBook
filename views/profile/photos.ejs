@@ -1,1 +1,24 @@
-<h3>Photos</h3>
+<div class="photos-header">
+    <h3>Photos</h3>
+
+    <% if(isOwnProfile){ %>
+        <button class="add-photo-btn" >
+        <input type="file" id="photoInput" accept="image/*" multiple hidden>
+            <i class="fa-solid fa-plus"></i>
+            Add Photos
+        </button>
+    <% } %>
+</div>
+
+<script>
+    const btn = document.getElementsByClassName("add-photo-btn")
+    const input = document.getElementById("photoInput")
+    btn.addEventListener("click",()=>{
+        input.click()
+    })
+    input.addEventListener('change',()=>{
+        if(input.files.length){
+            console.log("hi")
+        }
+    })
+</script>
