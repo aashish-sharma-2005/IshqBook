@@ -13,6 +13,7 @@ const storage = new CloudinaryStorage({
         let folder = 'IshqBook/misc'
         if(file.fieldname==="profilePic") folder = "IshqBook/profile"
         else if(file.fieldname === "coverPhoto") folder = "IshqBook/cover"
+        else if(file.fieldname === "createPost") folder = "IshqBook/posts"
         return {folder,resource_type:"image"}
     }
 })

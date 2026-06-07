@@ -7,16 +7,7 @@ const app = express();
 const connect = require("./config/connectDB");
 const {setUser} = require("./midleware/user");
 connect();
-app.use(
-    session({
-        secret: process.env.SESSION_SECRET || "mysecretkey",
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-            maxAge: 2 * 60 * 1000
-        }
-    })
-);
+app.use(session({secret: process.env.SESSION_SECRET,resave: false,saveUninitialized: false,cookie: {maxAge: 2 * 60 * 1000}}));
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());

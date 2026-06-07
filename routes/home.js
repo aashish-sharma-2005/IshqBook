@@ -8,6 +8,7 @@ const {getFriends,sendRequest,cancelRequest,acceptRequest} = require("../control
 const {getNotifications,patchNotification} = require("../controler/notifications/notifications")
 const {getProfile,uploadCover,uploadProfile,deleteCover,deleteProfile} = require("../controler/profile/profile")
 const {notificationCount} = require("../midleware/user")
+const {createNewPost} = require("../controler/post/post")
 router.use(notificationCount)
 
 router.get('/',getHome)
@@ -24,5 +25,7 @@ router.patch('/profile/upload-cover',upload.single("coverPhoto"),uploadCover)
 router.patch('/profile/upload-profile',upload.single("profilePic"),uploadProfile)
 router.delete('/profile/delete-cover',deleteCover)
 router.delete('/profile/delete-profile',deleteProfile);
+
+router.post('/profile/createPost',upload.array('createPost',20),createNewPost)
 
 module.exports = router;

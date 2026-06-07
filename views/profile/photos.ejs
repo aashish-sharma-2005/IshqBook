@@ -2,23 +2,126 @@
     <h3>Photos</h3>
 
     <% if(isOwnProfile){ %>
-        <button class="add-photo-btn" >
-        <input type="file" id="photoInput" accept="image/*" multiple hidden>
+        <button id="createPost" class="add-photo-btn">
+            <input type="file" id="photoInput" accept="image/*" multiple hidden>
             <i class="fa-solid fa-plus"></i>
             Add Photos
         </button>
-    <% } %>
+        <% } %>
+</div>
+
+<div class="post-modal" id="postModal">
+
+    <div class="post-box">
+
+        <div class="post-header">
+            <h3>Create Post</h3>
+            <button id="closePost">✖</button>
+        </div>
+
+        <div class="post-user">
+            <img src="<%= userInfo.profile?.url || '/image/profile.png' %>">
+            <span>
+                <%= userInfo.name %>
+            </span>
+        </div>
+
+        <textarea id="caption" placeholder="What's on your mind?"></textarea>
+
+        <div id="previewContainer"></div>
+
+        <button id="submitPost">
+            Post
+        </button>
+
+    </div>
+
 </div>
 
 <script>
-    const btn = document.getElementsByClassName("add-photo-btn")
-    const input = document.getElementById("photoInput")
-    btn.addEventListener("click",()=>{
-        input.click()
-    })
-    input.addEventListener('change',()=>{
-        if(input.files.length){
-            console.log("hi")
+    const previewContainer = document.getElementById("previewContainer");
+    const postModal = document.getElementById("postModal");
+    const caption = document.getElementById("caption");
+    const submitPost = document.getElementById("submitPost");
+    const input = document.getElementById("photoInput");
+    const createPost = document.getElementById("createPost");
+    let selectedFiles = [];
+
+    createPost.addEventListener("click", () => {
+        input.click();
+    });
+
+    input.addEventListener("change", () => {
+
+        if (input.files.length > 20) {
+            alert("Only Select less than 20");
+            return;
         }
-    })
+
+        selectedFiles = [...input.files];
+
+        previewContainer.innerHTML = "";
+
+        selectedFiles.forEach(file => {
+
+            const reader = new FileReader();
+
+            reader.onload = e => {
+
+                const img = document.createElement("img");
+                img.src = e.target.result;
+
+                previewContainer.appendChild(img);
+            }
+
+            reader.readAsDataURL(file);
+        });
+
+        postModal.style.display = "flex";
+    });
+
+
+    submitPost.addEventListener("click", async () => {
+
+        const formData = new FormData();
+
+        formData.append("caption", caption.value);
+
+        selectedFiles.forEach(file => {
+            formData.append("createPost", file);
+        });
+
+        try {
+
+            const res = await fetch("/home/profile/createPost", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+
+                postModal.style.display = "none";
+
+                caption.value = "";
+                previewContainer.innerHTML = "";
+                input.value = "";
+
+                location.reload();
+            }
+
+        } catch (err) {
+            console.log(err);
+        }
+    });
+    document.getElementById("closePost")
+        .addEventListener("click", () => {
+
+            postModal.style.display = "none";
+
+            caption.value = "";
+            previewContainer.innerHTML = "";
+            input.value = "";
+        });
 </script>
